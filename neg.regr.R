@@ -58,7 +58,7 @@ regr <- function(data=NULL, formula=NULL, predictor=NULL, #input for full datase
     model.results <- summary(model)
 
     # reg. coefficient point estimate and ci's
-    predictor <- deparse(substitute(predictor))
+    #predictor <- deparse(substitute(predictor))
     if (predictor=="NULL") {
       stop("please enter the name of the predictor you are interested in testing using the 'predictor' argument")
     }

@@ -29,6 +29,11 @@ ui <- dashboardPage(
     hidden(
       div(
         id = "marks",
+        fileInput("filedata", label = h4("File input",tags$head(tags$style("#q1{display:inline}")),bsButton("q1", label = "", icon = icon("question"), style = "info", size = "extra-small")),accept = c(".csv", ".xlsx", ".sav"), buttonLabel = "Choosing ...", placeholder = "No files selected yet"),
+        bsPopover(id = "q1", title = "",content = paste0("Accepted file extensions: .csv"),placement = "right",trigger = "focus",options = list(container = "body")),
+        uiOutput("xvariable"),
+        uiOutput("yvariable"),
+        uiOutput("zvariable"),
         numericInput("b", label = h4(HTML("Standardized Regression Coefficient of Interest (&beta;)")), value = NULL),
         numericInput("br", label = h4("Regression Coefficient of Interest (b)"), NULL),
         numericInput("se", h4("Standard Error Associated With the Above Regression Coefficient (se)"), NULL),
@@ -40,7 +45,9 @@ ui <- dashboardPage(
         numericInput("eiur", h4("Upper Bound of the Equivalence Interval (eiu)"), NULL),
         fluidRow(column(11, align="center", 
                         actionButton("submit", "Run", style='padding:7px; font-size:110%'),
-                        actionButton("submitr", "Run", style='padding:7px; font-size:110%')
+                        actionButton("submitr", "Run", style='padding:7px; font-size:110%'),
+                        actionButton("submitd", "Run", style='padding:7px; font-size:110%'),
+                        actionButton("submitdr", "Run", style='padding:7px; font-size:110%')
                         ))
       ))
   ),
@@ -119,6 +126,7 @@ ui <- dashboardPage(
                         br(),
                         verbatimTextOutput('lmSummary'),
                         fluidRow(column(12, align="center", 
+                                        radioButtons("choice", h4(tags$b("Select your preferred method:")), choices = c("I would like to upload a dataset", "I would like to input the exact values"), selected = character(0)),
                                         radioButtons(inputId="nominal", label=h4(tags$b("Are you using a standardized equivalence interval?")), 
                                                      choices=c("Yes","No"), selected = character(0)))))),
                     hidden(
@@ -185,6 +193,72 @@ ui <- dashboardPage(
                                plotOutput("plotr"), 
                                fluidRow(column(12, align="center", 
                                                actionButton("prevBtn2", "< Go Back", style='padding:7px; font-size:110%')))
+                               
+                        ))),
+                    hidden(
+                      div(
+                        class = "page",
+                        id = "page4",
+                        column(12, align="left", 
+                               h4(id="reg","Regression coefficient for predictor of interest:"),
+                               p(id="coef",HTML("&beta; = "),tags$head(tags$style("#coefd{display:inline}"))),textOutput("coefd"),p(id="cil",", 95% CI = [",tags$head(tags$style("#cild{display:inline}"))),textOutput("cild"), p(id="cil", ",", tags$head(tags$style("#cild{display:inline}"))), textOutput("ciud"), p(id="ciu", "], standard error = ", tags$head(tags$style("#ciud{display:inline}"))),textOutput("sed"), p(id="se", " ", tags$head(tags$style("#sed{display:inline}"))),
+                               h4(id="AH", "Anderson-Hauck (AH) procedure:"),
+                               tags$head(tags$style(
+                                 "#tvalued{
+        display:inline
+        }"
+                               )),
+                               p(id="t","Anderson-Hauck T statistic =",style="display:inline"),textOutput("tvalued"),
+                               tags$head(tags$style(
+                                 "#pvalued{
+        display:inline
+        }"
+                               )),
+                               p(id="p",", p-value =",style="display:inline"),textOutput("pvalued"),
+                               h4(id="conclusion","Conclusion:"),
+                               textOutput("textd"),
+                               h4(id="graphs", "Graphs:"),
+                               p(strong("Figure 1")),
+                               p("The Standardized effect and its 95% CI"),
+                               plotOutput("plotd"), 
+                               p(strong("Figure 2")),
+                               p("The proportional Distance"),
+                               plotOutput("plot4"), 
+                               fluidRow(column(12, align="center", 
+                                               actionButton("prevBtn3", "< Go Back", style='padding:7px; font-size:110%')))
+                               
+                        ))),
+                    hidden(
+                      div(
+                        class = "page",
+                        id = "page5",
+                        column(12, align="left", 
+                               h4(id="reg","Regression coefficient for predictor of interest:"),
+                               p(id="coef","b = ",tags$head(tags$style("#coefdr{display:inline}"))),textOutput("coefdr"),p(id="cildr",", 95% CI = [",tags$head(tags$style("#cildr{display:inline}"))),textOutput("cildr"), p(id="cildr", ",", tags$head(tags$style("#cildr{display:inline}"))), textOutput("ciudr"), p(id="ciudr", "], standard error = ", tags$head(tags$style("#ciudr{display:inline}"))),textOutput("sedr"), p(id="sedr", " ", tags$head(tags$style("#sedr{display:inline}"))),
+                               h4(id="AH", "Anderson-Hauck (AH) procedure:"),
+                               tags$head(tags$style(
+                                 "#tvaluedr{
+        display:inline
+        }"
+                               )),
+                               p(id="t","Anderson-Hauck T statistic =",style="display:inline"),textOutput("tvaluedr"),
+                               tags$head(tags$style(
+                                 "#pvaluedr{
+        display:inline
+        }"
+                               )),
+                               p(id="p",", p-value =",style="display:inline"),textOutput("pvaluedr"),
+                               h4(id="conclusion","Conclusion:"),
+                               textOutput("textdr"),
+                               h4(id="graphs", "Graphs:"),
+                               p(strong("Figure 1")),
+                               p("The Standardized effect and its 95% CI"),
+                               plotOutput("plotdr"), 
+                               p(strong("Figure 2")),
+                               p("The proportional Distance"),
+                               plotOutput("plot5"), 
+                               fluidRow(column(12, align="center", 
+                                               actionButton("prevBtn4", "< Go Back", style='padding:7px; font-size:110%')))
                                
                         ))),
                     symbol("copyright"),p(id="none","Alter & Counsell"),p("",tags$head(tags$style("#none{display:inline}")))
